@@ -1,0 +1,33 @@
+import requests
+import logging
+from datetime import datetime
+
+# Set up logging
+logging.basicConfig(filename='/var/log/application_uptime.log', level=logging.INFO, format='%(asctime)s %(message)s')
+
+# Define the URL to check and the expected status code
+URL = 'http://example.com'
+EXPECTED_STATUS_CODE = 200
+
+def log_status(status):
+    """Logs the status of the application."""
+    logging.info(status)
+    print(status)
+
+def check_application_status():
+    """Check the status of the application."""
+    try:
+        response = requests.get(URL, timeout=10)
+        if response.status_code == EXPECTED_STATUS_CODE:
+            log_status(f'UP: Application is functioning correctly. Status code: {response.status_code}')
+        else:
+            log_status(f'DOWN: Application returned unexpected status code: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        log_status(f'DOWN: Application is unavailable. Error: {e}')
+
+def main():
+    """Main function to check application uptime."""
+    check_application_status()
+
+if __name__ == "__main__":
+    main()
